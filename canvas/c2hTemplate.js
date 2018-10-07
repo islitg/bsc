@@ -1,0 +1,94 @@
+<!--input type="button" value="Post Screenshot" onclick="takeCurrentScreenShot();"-->
+<script src="html2canvas.js"></script>
+<script type="text/javascript">
+ function takeScreenShot(){
+ html2canvas(window.parent.document.body, {
+ onrendered: function(canvas) {
+ var cand = document.getElementsByTagName('canvas');
+ if(cand[0] === undefined || cand[0] === null){
+
+ }else{
+ //cand[0].remove();
+ document.body.removeChild(cand[0]);
+ }
+ document.body.appendChild(canvas);
+ }
+ });
+ }
+
+ function postImage(){
+ //takeScreenShot();
+
+ html2canvas(window.parent.document.body, {
+ onrendered: function(canvas) {
+ var cand = document.getElementsByTagName('canvas');
+ if(cand[0] === undefined || cand[0] === null){
+
+ }else{
+ //cand[0].remove();
+ document.body.removeChild(cand[0]);
+ }
+ document.body.appendChild(canvas);
+ }
+ });
+
+ var cand = document.getElementsByTagName('canvas');
+ var canvasData = cand[0].toDataURL("image/png");
+ //var canvasData = cand[0].toDataURL("image/png").replace(/^data:.*?;base64,/, '');
+ var ajax = new XMLHttpRequest();
+ //ajax.open("POST",'/pr/custom/testSave.php',false);
+ ajax.open("POST",'http://localhost:3000/saveScreen',false);
+ //ajax.setRequestHeader('Content-Type', 'application/upload');
+ //ajax.setRequestHeader('Content-Type', 'X-www-form-urlencoded);
+ ajax.setRequestHeader('Content-Type', 'image/png');
+ ajax.send(canvasData );
+ alert('done');
+ }
+
+ function  takeCurrentScreenShot(){
+     takeScreenShot();
+     postImage();
+ }
+
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+     document.getElementById("demo").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "ajax_info.txt", true);
+  xhttp.send();
+}
+
+
+function loadXmlDoc() {
+ var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+           if (xmlhttp.status == 200) {
+               document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
+           }
+           else if (xmlhttp.status == 400) {
+              alert('There was an error 400');
+           }
+           else {
+               //alert('something else other than 200 was returned');
+               //alert(xmlhttp.status);
+               document.getElementById("myDiv").innerHTML = xmlhttp.status;
+           }
+        }
+    };
+
+    xmlhttp.open("GET", "/ajax_info.txt", true);
+    xmlhttp.send();
+
+}
+
+
+//takeScreenShot();
+//loadDoc();
+loadXmlDoc();
+
+</script>
